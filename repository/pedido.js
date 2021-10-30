@@ -27,3 +27,26 @@ export async function novoPedido(cliente, produto, valor) {
 
   return pedido;
 }
+
+export async function obterPedido(id) {
+  
+  let arquivo = await lerPedidos();
+  let listaPedidos = arquivo.pedidos;
+  let idPedido = listaPedidos.findIndex((pedido) => pedido.id === id);
+
+  if (idPedido === -1) {
+    // não existe pedido
+    res.status(404).send("Pedido não encontrado");
+    return;
+  }
+
+  return listaPedidos[idPedido];
+}
+
+export async function atualizarPedido(pedido) {
+
+}
+
+export async function apagarPedido(id) {
+
+}
