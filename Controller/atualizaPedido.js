@@ -1,21 +1,20 @@
-import { lerPedidos } from "../orders/index.js";
+import { gravarPedidos, lerPedidos } from "../orders/index.js";
 import * as PedidoRepository from '../repository/pedido.js'
 
 export default async function updateOrder(req, res) {
-  let idEscolhido = req.body.id;
+  let { idEscolhido } = req.params;
 
-  let arquivo = await lerPedidos();
-  let listaPedidos = arquivo.pedidos;
-
-  let idPedido = listaPedidos.findIndex((pedido) => pedido.id === idEscolhido);
-
-  if (idPedido === -1) {
+  let pedido = await PedidoRepository.obterPedido(parseInt(idEscolhido));
+  console.log(pedido);
+  if (!pedido) {
     // não existe pedido
     res.status(404).send("Pedido não encontrado");
     return;
   }
 
-  listaPedidos[idPedido] = { ...listaPedidos[idPedido], ...req.body };
+  let pedidoAtualizado = { ...pedido.pedido, ...req.body };
+  
+  await PedidoRepository.atualizarPedido(pedidoAtualizado);
 
-  res.send(listaPedidos[idPedido]);
+  res.send(pedidoAtualizado);
 }
