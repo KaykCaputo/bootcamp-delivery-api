@@ -29,24 +29,30 @@ export async function novoPedido(cliente, produto, valor) {
 }
 
 export async function obterPedido(id) {
-  
+
   let arquivo = await lerPedidos();
   let listaPedidos = arquivo.pedidos;
-  let idPedido = listaPedidos.findIndex((pedido) => pedido.id === id);
-
-  if (idPedido === -1) {
+  let indexPedido = listaPedidos.findIndex((pedido) => pedido.id === id);
+  
+  if (indexPedido === -1) {
     // não existe pedido
-    res.status(404).send("Pedido não encontrado");
     return;
   }
 
-  return listaPedidos[idPedido];
+  return { index: indexPedido, pedido: listaPedidos[indexPedido]};
 }
 
 export async function atualizarPedido(pedido) {
+  let arquivo = await lerPedidos();
+  let pedidoArquivo = await obterPedido(pedido.id);
 
+  arquivo.pedidos[pedidoArquivo.index] = pedido;
+  await gravarPedidos(arquivo);
 }
 
-export async function apagarPedido(id) {
+export async function apagarPedido(index) {
+  let arquivo = await lerPedidos();
 
+  arquivo.pedidos.splice(index, 1);
+  await gravarPedidos(arquivo);
 }
