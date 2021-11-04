@@ -8,11 +8,11 @@ export default async function sumCostumerValues(req, res) {
   const reducer = (previousValue, currentItem) => previousValue + currentItem.valor;
   console.log(nomeCliente);
 
-  // let valores = [];
-  // for (let i = 0; i < listaPedidos.length; i++) {
-  //   let itemAtual = listaPedidos[i];
-  //   valores.push(itemAtual.valor);
-  // }
+  let valores = [];
+  for (let i = 0; i < listaPedidos.length; i++) {
+    let itemAtual = listaPedidos[i];
+    valores.push(itemAtual.valor);
+  }
   let valorTotal = listaPedidos
     .filter((p) => nomeCliente.toLocaleLowerCase() === p.cliente?.toLocaleLowerCase() && p.entregue)
     .reduce(reducer,0);
